@@ -28,9 +28,8 @@ def test_inventory_catalog(driver):
         assert helpers.element_visible(driver, locator), f"Expected {label} to be visible"
 
     first_name, first_price = helpers.first_product_details(driver)
-    assert first_name.strip(), "Expected first product to have a non-empty name"
-    assert first_price.strip(), "Expected first product to have a non-empty price"
-    print(f"First product: {first_name} - {first_price}")
+    assert first_name.strip(), f"Expected non-empty product name, found: '{first_name}'"
+    assert first_price.strip(), f"Expected non-empty product price, found: '{first_price}'"
 
 
 def test_add_first_product_to_cart(driver):

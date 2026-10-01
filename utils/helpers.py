@@ -55,6 +55,7 @@ def first_product_details(driver: WebDriver) -> tuple[str, str]:
     first = inventory_products(driver)[0]
     name = first.find_element(*PRODUCT_NAME).text
     price = first.find_element(*PRODUCT_PRICE).text
+    logger.info("First product: %s - %s", name, price)
     return name, price
 
 
