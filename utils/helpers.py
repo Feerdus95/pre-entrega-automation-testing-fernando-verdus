@@ -17,18 +17,23 @@ TIMEOUT = 10
 USER_INPUT = (By.ID, "user-name")
 PASSWORD_INPUT = (By.ID, "password")
 LOGIN_BUTTON = (By.ID, "login-button")
-PAGE_TITLE = (By.CSS_SELECTOR, ".title")
-PRODUCTS = (By.CSS_SELECTOR, ".inventory_item")
-PRODUCT_NAME = (By.CSS_SELECTOR, ".inventory_item_name")
-PRODUCT_PRICE = (By.CSS_SELECTOR, ".inventory_item_price")
-FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, ".btn_primary")  # used relative to a product element
-CART_BADGE = (By.CSS_SELECTOR, ".shopping_cart_badge")
-CART_LINK = (By.CSS_SELECTOR, "#shopping_cart_container a")
-CART_ITEM_NAMES = (By.CSS_SELECTOR, ".cart_item .inventory_item_name")
+PAGE_TITLE = (By.CSS_SELECTOR, '[data-test="title"]')
+PRODUCTS = (By.CSS_SELECTOR, '[data-test="inventory-item"]')
+PRODUCT_NAME = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
+PRODUCT_PRICE = (By.CSS_SELECTOR, '[data-test="inventory-item-price"]')
+# Live DOM has per-product add buttons (add-to-cart-<slug>), not a plain "add-to-cart";
+# prefix match resolves against the same data-test children inside each product element.
+FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, '[data-test^="add-to-cart"]')  # used relative to a product element
+CART_BADGE = (By.CSS_SELECTOR, '[data-test="shopping-cart-badge"]')
+CART_LINK = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
+# Cart rows reuse the inventory-item markup: live DOM has no "cart-item-name",
+# the name element carries data-test="inventory-item-name".
+CART_ITEM_NAMES = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
 
 INVENTORY_ELEMENT = (By.ID, "inventory_container")
-NAV_MENU = (By.CSS_SELECTOR, ".bm-burger-button")
-SORT_DROPDOWN = (By.CSS_SELECTOR, ".product_sort_container")
+# Live DOM burger button is data-test="open-menu" (no "bm-burger-button" attribute).
+NAV_MENU = (By.CSS_SELECTOR, '[data-test="open-menu"]')
+SORT_DROPDOWN = (By.CSS_SELECTOR, '[data-test="product-sort-container"]')
 
 
 def wait(driver: WebDriver):
