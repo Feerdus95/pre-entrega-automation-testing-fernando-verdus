@@ -1,14 +1,54 @@
-2026-10-01 02:44:05,451 INFO Opening login page: https://www.saucedemo.com/
-2026-10-01 02:44:05,946 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-10-01 02:44:05,968 INFO RESULT tests/test_saucedemo.py::test_successful_login: PASSED
-2026-10-01 02:44:08,126 INFO START tests/test_saucedemo.py::test_inventory_catalog
-2026-10-01 02:44:08,689 INFO Opening login page: https://www.saucedemo.com/
-2026-10-01 02:44:09,207 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-10-01 02:44:09,318 INFO First product: Sauce Labs Backpack - $29.99
-2026-10-01 02:44:09,318 INFO RESULT tests/test_saucedemo.py::test_inventory_catalog: PASSED
-2026-10-01 02:44:11,475 INFO START tests/test_saucedemo.py::test_add_first_product_to_cart
-2026-10-01 02:44:12,042 INFO Opening login page: https://www.saucedemo.com/
-2026-10-01 02:44:12,532 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-10-01 02:44:12,602 INFO Added first product to cart: Sauce Labs Backpack
-2026-10-01 02:44:12,648 INFO Cart page opened: https://www.saucedemo.com/cart.html
-2026-10-01 02:44:12,660 INFO RESULT tests/test_saucedemo.py::test_add_first_product_to_cart: PASSED
+2026-10-01 03:12:01,411 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:01,875 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:01,947 INFO Added first product to cart: Sauce Labs Backpack
+2026-10-01 03:12:01,990 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-10-01 03:12:02,002 INFO RESULT tests/test_cart.py::test_add_first_product_to_cart: PASSED
+2026-10-01 03:12:04,151 INFO START tests/test_checkout.py::test_checkout_completes_order
+2026-10-01 03:12:04,706 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:05,196 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:05,265 INFO Added first product to cart: Sauce Labs Backpack
+2026-10-01 03:12:05,299 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-10-01 03:12:05,540 INFO RESULT tests/test_checkout.py::test_checkout_completes_order: PASSED
+2026-10-01 03:12:07,694 INFO START tests/test_checkout.py::test_checkout_requires_postal_code
+2026-10-01 03:12:08,267 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:08,762 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:08,831 INFO Added first product to cart: Sauce Labs Backpack
+2026-10-01 03:12:08,865 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-10-01 03:12:09,030 INFO RESULT tests/test_checkout.py::test_checkout_requires_postal_code: PASSED
+2026-10-01 03:12:11,195 INFO START tests/test_checkout.py::test_checkout_cancel_returns_to_cart
+2026-10-01 03:12:11,756 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:12,286 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:12,354 INFO Added first product to cart: Sauce Labs Backpack
+2026-10-01 03:12:12,388 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-10-01 03:12:12,442 INFO RESULT tests/test_checkout.py::test_checkout_cancel_returns_to_cart: PASSED
+2026-10-01 03:12:14,595 INFO START tests/test_inventory.py::test_inventory_catalog
+2026-10-01 03:12:15,160 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:15,707 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:15,826 INFO First product: Sauce Labs Backpack - $29.99
+2026-10-01 03:12:15,826 INFO RESULT tests/test_inventory.py::test_inventory_catalog: PASSED
+2026-10-01 03:12:17,987 INFO START tests/test_inventory.py::test_product_sorting
+2026-10-01 03:12:18,569 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:19,037 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:19,371 INFO RESULT tests/test_inventory.py::test_product_sorting: PASSED
+2026-10-01 03:12:21,537 INFO START tests/test_inventory.py::test_product_detail_page_matches_catalog
+2026-10-01 03:12:22,103 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:22,604 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:22,659 INFO First product: Sauce Labs Backpack - $29.99
+2026-10-01 03:12:22,760 INFO RESULT tests/test_inventory.py::test_product_detail_page_matches_catalog: PASSED
+2026-10-01 03:12:24,934 INFO START tests/test_login.py::test_successful_login
+2026-10-01 03:12:25,508 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:26,004 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:26,028 INFO RESULT tests/test_login.py::test_successful_login: PASSED
+2026-10-01 03:12:28,186 INFO START tests/test_login.py::test_login_failure_shows_error_banner[locked-out]
+2026-10-01 03:12:29,198 INFO RESULT tests/test_login.py::test_login_failure_shows_error_banner[locked-out]: PASSED
+2026-10-01 03:12:31,349 INFO START tests/test_login.py::test_login_failure_shows_error_banner[wrong-password]
+2026-10-01 03:12:32,429 INFO RESULT tests/test_login.py::test_login_failure_shows_error_banner[wrong-password]: PASSED
+2026-10-01 03:12:34,578 INFO START tests/test_login.py::test_login_failure_shows_error_banner[empty-username]
+2026-10-01 03:12:35,588 INFO RESULT tests/test_login.py::test_login_failure_shows_error_banner[empty-username]: PASSED
+2026-10-01 03:12:37,732 INFO START tests/test_login.py::test_login_failure_shows_error_banner[empty-password]
+2026-10-01 03:12:38,719 INFO RESULT tests/test_login.py::test_login_failure_shows_error_banner[empty-password]: PASSED
+2026-10-01 03:12:40,868 INFO START tests/test_login.py::test_back_button_after_logout_does_not_restore_session
+2026-10-01 03:12:41,425 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 03:12:41,911 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 03:12:42,487 INFO Logged out
+2026-10-01 03:12:42,507 INFO RESULT tests/test_login.py::test_back_button_after_logout_does_not_restore_session: PASSED

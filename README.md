@@ -57,14 +57,17 @@ Chrome adecuado; no hace falta instalarlo a mano.
 
 ```text
 ├── tests/
-│   └── test_saucedemo.py      # Casos de prueba y aserciones
+│   ├── test_login.py          # Login positivo, fallos con banner y sesión
+│   ├── test_inventory.py      # Catálogo, ordenamiento y detalle de producto
+│   ├── test_cart.py           # Agregado al carrito
+│   └── test_checkout.py       # Checkout: resumen, validaciones y cancelación
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
-│   └── helpers.py             # Login, esperas, catálogo y carrito
+│   └── helpers.py             # Login, esperas, catálogo, carrito y checkout
 ├── reports/
-│   ├── reporte.html           # Reporte HTML (generado al ejecutar)
+│   ├── reporte.html           # Reporte HTML (última ejecución; se regenera)
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
-│   └── logs/                  # test_execution.log (generado)
+│   └── logs/                  # test_execution.log (última ejecución)
 ├── conftest.py                # Fixtures del navegador, logging y captura de fallos
 ├── requirements.txt           # Dependencias
 └── README.md
@@ -75,8 +78,15 @@ Chrome adecuado; no hace falta instalarlo a mano.
 | Test | Qué valida |
 |---|---|
 | `test_successful_login` | El usuario `standard_user` inicia sesión y llega a `/inventory.html`, con encabezado `Products` y título `Swag Labs` |
+| `test_login_failure_shows_error_banner` ×4 | Usuario bloqueado, credenciales incorrectas, username vacío y password vacío muestran el banner de error y no avanzan al inventario |
+| `test_back_button_after_logout_does_not_restore_session` | Tras logout, el botón "back" del navegador no muestra el inventario: vuelve al login |
 | `test_inventory_catalog` | El catálogo carga con al menos un producto, navegación/carrito/orden visibles, y extrae nombre y precio del primer producto |
+| `test_product_sorting` | Las cuatro opciones de ordenamiento (nombre y precio, ascendente/descendente) dejan el producto esperado primero |
+| `test_product_detail_page_matches_catalog` | La página de detalle muestra nombre y precio idénticos al catálogo; agregar desde allí setea el badge y persiste al volver |
 | `test_add_first_product_to_cart` | El primer producto se agrega al carrito, el contador muestra `1` y el producto aparece en `/cart.html` |
+| `test_checkout_completes_order` | Flujo completo carrito → datos → resumen (subtotal $29.99, impuesto $2.40, total $32.39) → finish → "Thank you for your order!" |
+| `test_checkout_requires_postal_code` | Sin código postal, el banner "Postal Code is required" bloquea el paso 2 |
+| `test_checkout_cancel_returns_to_cart` | Cancelar en el paso 1 vuelve al carrito con el producto intacto |
 
 Cada test es independiente: abre su propio navegador, inicia sesión por su
 cuenta y cierra el navegador al terminar (fixture de alcance de test).
