@@ -1,4 +1,4 @@
-# Pre-entrega Automation Testing — SauceDemo (Fernando Verdus)
+# Pre-entrega Automation Testing — SauceDemo
 
 Proyecto de automatización de pruebas web para la aplicación de demostración
 [SauceDemo](https://www.saucedemo.com/) usando **Python + Pytest + Selenium
@@ -60,12 +60,12 @@ Chrome adecuado; no hace falta instalarlo a mano.
 │   └── test_saucedemo.py      # Casos de prueba y aserciones
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
-│   └── helpers.py             # Login, waits explícitos, interacciones de catálogo y carrito
+│   └── helpers.py             # Login, esperas, catálogo y carrito
 ├── reports/
-│   ├── reporte.html           # Reporte HTML (generado)
+│   ├── reporte.html           # Reporte HTML (generado al ejecutar)
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
 │   └── logs/                  # test_execution.log (generado)
-├── conftest.py                # Fixtures (ciclo de vida del navegador) y hooks de evidencia
+├── conftest.py                # Fixtures del navegador, logging y captura de fallos
 ├── requirements.txt           # Dependencias
 └── README.md
 ```
@@ -81,9 +81,17 @@ Chrome adecuado; no hace falta instalarlo a mano.
 Cada test es independiente: abre su propio navegador, inicia sesión por su
 cuenta y cierra el navegador al terminar (fixture de alcance de test).
 
-La sincronización usa esperas explícitas (`WebDriverWait` +
-`expected_conditions`), nunca `time.sleep()`. Las credenciales (`standard_user` /
-`secret_sauce`) son públicas del entorno demo de SauceDemo.
+## Decisiones de automatización
+
+- **Esperas explícitas** (`WebDriverWait` + `expected_conditions`) en toda
+  interacción; un único timeout centralizado en `utils/helpers.py`.
+- **Locators estables**: IDs donde existen (`#user-name`, `#password`,
+  `#login-button`) y atributos `data-test` del DOM de SauceDemo para el
+  resto, verificados contra la aplicación en vivo.
+- **Clicks por evento DOM**: la aplicación React descarta ocasionalmente el
+  click nativo si aún no montó sus listeners; se dispara el evento de click
+  del DOM directamente y el alta al carrito se confirma leyendo el badge,
+  con reintento controlado (nunca doble alta).
 
 ## Reportes y evidencia
 
@@ -93,3 +101,8 @@ La sincronización usa esperas explícitas (`WebDriverWait` +
 - **Logs de ejecución:** `reports/logs/test_execution.log` — inicio de cada
   test, acciones principales y resultado. Las contraseñas nunca se escriben
   en el log.
+
+## Credenciales
+
+`standard_user` / `secret_sauce` — provistas públicamente por el entorno de
+demostración de SauceDemo.
