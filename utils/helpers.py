@@ -18,6 +18,8 @@ TIMEOUT = 10
 USER_INPUT = (By.ID, "user-name")
 PASSWORD_INPUT = (By.ID, "password")
 LOGIN_BUTTON = (By.ID, "login-button")
+ERROR_BANNER = (By.CSS_SELECTOR, '[data-test="error"]')
+LOGOUT_LINK = (By.CSS_SELECTOR, '[data-test="logout-sidebar-link"]')
 PAGE_TITLE = (By.CSS_SELECTOR, '[data-test="title"]')
 PRODUCTS = (By.CSS_SELECTOR, '[data-test="inventory-item"]')
 PRODUCT_NAME = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
@@ -32,8 +34,9 @@ CART_LINK = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
 CART_ITEM_NAMES = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
 
 INVENTORY_ELEMENT = (By.ID, "inventory_container")
-# Live DOM burger button is data-test="open-menu" (no "bm-burger-button" attribute).
-NAV_MENU = (By.CSS_SELECTOR, '[data-test="open-menu"]')
+# The clickable burger wrapper: react-burger-menu only opens on native mouse
+# events, so this element (not the inner icon) must receive the click.
+NAV_MENU = (By.CSS_SELECTOR, ".bm-burger-button")
 SORT_DROPDOWN = (By.CSS_SELECTOR, '[data-test="product-sort-container"]')
 
 
@@ -110,3 +113,11 @@ def open_cart(driver: WebDriver) -> None:
 
 def cart_item_names(driver: WebDriver):
     return [item.text for item in driver.find_elements(*CART_ITEM_NAMES)]
+
+
+def logout(driver: WebDriver) -> None:
+    # Native click here on purpose: the burger menu ignores JS-dispatched clicks.
+    wait(driver).until(EC.element_to_be_clickable(NAV_MENU)).click()
+    js_click(driver, LOGOUT_LINK)
+    wait(driver).until(EC.visibility_of_element_located(LOGIN_BUTTON))
+    logger.info("Logged out")
