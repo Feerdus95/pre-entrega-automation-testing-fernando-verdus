@@ -18,6 +18,8 @@ PASSWORD_INPUT = (By.ID, "password")
 LOGIN_BUTTON = (By.ID, "login-button")
 PAGE_TITLE = (By.CSS_SELECTOR, ".title")
 PRODUCTS = (By.CSS_SELECTOR, ".inventory_item")
+PRODUCT_NAME = (By.CSS_SELECTOR, ".inventory_item_name")
+PRODUCT_PRICE = (By.CSS_SELECTOR, ".inventory_item_price")
 FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, ".inventory_item .btn_primary")
 CART_BADGE = (By.CSS_SELECTOR, ".shopping_cart_badge")
 CART_LINK = (By.CSS_SELECTOR, "#shopping_cart_container a")
@@ -30,6 +32,11 @@ SORT_DROPDOWN = (By.CSS_SELECTOR, ".product_sort_container")
 
 def wait(driver: WebDriver):
     return WebDriverWait(driver, TIMEOUT)
+
+
+def inventory_products(driver: WebDriver):
+    wait(driver).until(EC.visibility_of_all_elements_located(PRODUCTS))
+    return driver.find_elements(*PRODUCTS)
 
 
 def login(driver: WebDriver, username: str = USERNAME, password: str = PASSWORD) -> None:
