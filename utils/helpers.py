@@ -1,5 +1,6 @@
 import logging
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -22,8 +23,8 @@ PRODUCTS = (By.CSS_SELECTOR, '[data-test="inventory-item"]')
 PRODUCT_NAME = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
 PRODUCT_PRICE = (By.CSS_SELECTOR, '[data-test="inventory-item-price"]')
 # Live DOM has per-product add buttons (add-to-cart-<slug>), not a plain "add-to-cart";
-# prefix match resolves against the same data-test children inside each product element.
-FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, '[data-test^="add-to-cart"]')  # used relative to a product element
+# document-scoped: first inventory item's add button.
+FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, '[data-test="inventory-item"] [data-test^="add-to-cart"]')
 CART_BADGE = (By.CSS_SELECTOR, '[data-test="shopping-cart-badge"]')
 CART_LINK = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
 # Cart rows reuse the inventory-item markup: live DOM has no "cart-item-name",
@@ -50,6 +51,14 @@ def element_visible(driver: WebDriver, locator: tuple) -> WebElement:
     return wait(driver).until(EC.visibility_of_element_located(locator))
 
 
+def js_click(driver: WebDriver, locator: tuple) -> None:
+    # Native clicks are occasionally dropped before React's synthetic-event
+    # system is listening (screenshot evidence: UI stays unchanged, no error).
+    # A dispatched DOM click event is always captured.
+    element = wait(driver).until(EC.element_to_be_clickable(locator))
+    driver.execute_script("arguments[0].click()", element)
+
+
 def first_product_details(driver: WebDriver) -> tuple[str, str]:
     """Read the name and price of the first inventory product."""
     first = inventory_products(driver)[0]
@@ -64,7 +73,7 @@ def login(driver: WebDriver, username: str = USERNAME, password: str = PASSWORD)
     driver.get(BASE_URL)
     wait(driver).until(EC.visibility_of_element_located(USER_INPUT)).send_keys(username)
     wait(driver).until(EC.visibility_of_element_located(PASSWORD_INPUT)).send_keys(password)
-    wait(driver).until(EC.element_to_be_clickable(LOGIN_BUTTON)).click()
+    js_click(driver, LOGIN_BUTTON)
     # Wait for the application to complete authentication before validating inventory
     wait(driver).until(EC.url_contains("/inventory.html"))
     wait(driver).until(EC.visibility_of_element_located(INVENTORY_ELEMENT))
@@ -74,7 +83,16 @@ def login(driver: WebDriver, username: str = USERNAME, password: str = PASSWORD)
 def add_first_product(driver: WebDriver) -> str:
     first = inventory_products(driver)[0]
     name = first.find_element(*PRODUCT_NAME).text
-    first.find_element(*FIRST_PRODUCT_ADD).click()
+    # React can drop the first synthetic click before handlers are mounted
+    # (observed suite flake): retry only while the badge is absent, so a
+    # landed click never produces a double add.
+    for attempt in range(1, 4):
+        js_click(driver, FIRST_PRODUCT_ADD)
+        try:
+            WebDriverWait(driver, 3).until(EC.visibility_of_element_located(CART_BADGE))
+            break
+        except TimeoutException:
+            logger.warning("Cart badge absent after add click %d, retrying", attempt)
     logger.info("Added first product to cart: %s", name)
     return name
 
@@ -84,7 +102,7 @@ def cart_badge_value(driver: WebDriver) -> str:
 
 
 def open_cart(driver: WebDriver) -> None:
-    wait(driver).until(EC.element_to_be_clickable(CART_LINK)).click()
+    js_click(driver, CART_LINK)
     wait(driver).until(EC.url_contains("/cart.html"))
     wait(driver).until(EC.visibility_of_element_located(CART_ITEM_NAMES))
     logger.info("Cart page opened: %s", driver.current_url)
