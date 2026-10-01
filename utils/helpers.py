@@ -1,6 +1,6 @@
 import logging
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -27,6 +27,8 @@ PRODUCT_PRICE = (By.CSS_SELECTOR, '[data-test="inventory-item-price"]')
 # Live DOM has per-product add buttons (add-to-cart-<slug>), not a plain "add-to-cart";
 # document-scoped: first inventory item's add button.
 FIRST_PRODUCT_ADD = (By.CSS_SELECTOR, '[data-test="inventory-item"] [data-test^="add-to-cart"]')
+FIRST_PRODUCT_NAME = (By.CSS_SELECTOR, '[data-test="inventory-item"] [data-test="inventory-item-name"]')
+DETAIL_ADD_BUTTON = (By.CSS_SELECTOR, '[data-test="add-to-cart"]')
 CART_BADGE = (By.CSS_SELECTOR, '[data-test="shopping-cart-badge"]')
 CART_LINK = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
 # Cart rows reuse the inventory-item markup: live DOM has no "cart-item-name",
@@ -47,6 +49,20 @@ def wait(driver: WebDriver):
 def inventory_products(driver: WebDriver):
     wait(driver).until(EC.visibility_of_all_elements_located(PRODUCTS))
     return driver.find_elements(*PRODUCTS)
+
+
+def wait_first_product_name(driver: WebDriver, expected: str) -> None:
+    # Sorting reorders the same React nodes, so wait on the resulting order
+    # rather than on element staleness; re-reads dodge stale references.
+    def is_first(drv: WebDriver) -> bool:
+        try:
+            return drv.find_elements(*PRODUCT_NAME)[0].text == expected
+        except (StaleElementReferenceException, IndexError):
+            return False
+
+    wait(driver).until(
+        is_first, message=f"{expected!r} never became the first product"
+    )
 
 
 def element_visible(driver: WebDriver, locator: tuple) -> WebElement:
