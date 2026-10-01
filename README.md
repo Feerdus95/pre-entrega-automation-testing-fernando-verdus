@@ -95,12 +95,15 @@ cuenta y cierra el navegador al terminar (fixture de alcance de test).
 
 ## Reportes y evidencia
 
-- **Reporte HTML:** `reports/reporte.html` (estados por test, tiempos, detalles de fallo).
+- **Reporte HTML:** `reports/reporte.html` (estados por test, tiempos, detalles
+  de fallo). Se incluye en el repositorio la última ejecución como evidencia;
+  cada corrida lo regenera.
 - **Capturas de fallo:** `reports/screenshots/test_<nombre>.png` — se generan
-  automáticamente solo cuando un test falla.
+  automáticamente solo cuando un test falla (no hay capturas en la última
+  ejecución porque los tres tests pasaron).
 - **Logs de ejecución:** `reports/logs/test_execution.log` — inicio de cada
-  test, acciones principales y resultado. Las contraseñas nunca se escriben
-  en el log.
+  test, acciones principales y resultado. Se incluye la última corrida como
+  evidencia. Las contraseñas nunca se escriben en el log.
 
 ## Credenciales
 

@@ -1,0 +1,14 @@
+2026-10-01 02:44:05,451 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 02:44:05,946 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 02:44:05,968 INFO RESULT tests/test_saucedemo.py::test_successful_login: PASSED
+2026-10-01 02:44:08,126 INFO START tests/test_saucedemo.py::test_inventory_catalog
+2026-10-01 02:44:08,689 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 02:44:09,207 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 02:44:09,318 INFO First product: Sauce Labs Backpack - $29.99
+2026-10-01 02:44:09,318 INFO RESULT tests/test_saucedemo.py::test_inventory_catalog: PASSED
+2026-10-01 02:44:11,475 INFO START tests/test_saucedemo.py::test_add_first_product_to_cart
+2026-10-01 02:44:12,042 INFO Opening login page: https://www.saucedemo.com/
+2026-10-01 02:44:12,532 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-10-01 02:44:12,602 INFO Added first product to cart: Sauce Labs Backpack
+2026-10-01 02:44:12,648 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-10-01 02:44:12,660 INFO RESULT tests/test_saucedemo.py::test_add_first_product_to_cart: PASSED

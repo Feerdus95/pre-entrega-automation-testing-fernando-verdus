@@ -9,10 +9,10 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
-# Generated reports/evidence (recreated on every run)
+# Generated evidence (report and execution log are kept as delivery evidence)
 reports/screenshots/*.png
 reports/logs/*.log
-reports/reporte.html
+!reports/logs/test_execution.log
 reports/assets/
 
 # Browser/driver binaries
