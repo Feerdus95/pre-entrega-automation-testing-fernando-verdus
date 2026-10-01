@@ -2,6 +2,7 @@ import logging
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -37,6 +38,19 @@ def wait(driver: WebDriver):
 def inventory_products(driver: WebDriver):
     wait(driver).until(EC.visibility_of_all_elements_located(PRODUCTS))
     return driver.find_elements(*PRODUCTS)
+
+
+def element_visible(driver: WebDriver, locator: tuple) -> WebElement:
+    """Wait for an element to be visible and return it (centralized TIMEOUT via wait())."""
+    return wait(driver).until(EC.visibility_of_element_located(locator))
+
+
+def first_product_details(driver: WebDriver) -> tuple[str, str]:
+    """Read the name and price of the first inventory product."""
+    first = inventory_products(driver)[0]
+    name = first.find_element(*PRODUCT_NAME).text
+    price = first.find_element(*PRODUCT_PRICE).text
+    return name, price
 
 
 def login(driver: WebDriver, username: str = USERNAME, password: str = PASSWORD) -> None:

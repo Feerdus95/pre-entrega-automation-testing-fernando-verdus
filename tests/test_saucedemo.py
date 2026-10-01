@@ -7,9 +7,7 @@ def test_successful_login(driver):
     assert "/inventory.html" in driver.current_url, (
         f"Expected to land on inventory page, current URL: {driver.current_url}"
     )
-    title = helpers.wait(driver).until(
-        helpers.EC.visibility_of_element_located(helpers.PAGE_TITLE)
-    ).text
+    title = helpers.element_visible(driver, helpers.PAGE_TITLE).text
     assert title == "Products", f"Expected 'Products' heading, found: '{title}'"
     assert driver.title == "Swag Labs", f"Expected page title 'Swag Labs', found: '{driver.title}'"
 
@@ -27,12 +25,9 @@ def test_inventory_catalog(driver):
         ("shopping cart", helpers.CART_LINK),
         ("product sort control", helpers.SORT_DROPDOWN),
     ]:
-        assert helpers.wait(driver).until(
-            helpers.EC.visibility_of_element_located(locator)
-        ), f"Expected {label} to be visible"
+        assert helpers.element_visible(driver, locator), f"Expected {label} to be visible"
 
-    first_name = products[0].find_element(*helpers.PRODUCT_NAME).text
-    first_price = products[0].find_element(*helpers.PRODUCT_PRICE).text
+    first_name, first_price = helpers.first_product_details(driver)
     assert first_name.strip(), "Expected first product to have a non-empty name"
     assert first_price.strip(), "Expected first product to have a non-empty price"
     print(f"First product: {first_name} - {first_price}")
