@@ -34,6 +34,18 @@ CART_LINK = (By.CSS_SELECTOR, '[data-test="shopping-cart-link"]')
 # Cart rows reuse the inventory-item markup: live DOM has no "cart-item-name",
 # the name element carries data-test="inventory-item-name".
 CART_ITEM_NAMES = (By.CSS_SELECTOR, '[data-test="inventory-item-name"]')
+CHECKOUT_BUTTON = (By.CSS_SELECTOR, '[data-test="checkout"]')
+FIRST_NAME_INPUT = (By.CSS_SELECTOR, '[data-test="firstName"]')
+LAST_NAME_INPUT = (By.CSS_SELECTOR, '[data-test="lastName"]')
+POSTAL_CODE_INPUT = (By.CSS_SELECTOR, '[data-test="postalCode"]')
+CONTINUE_BUTTON = (By.CSS_SELECTOR, '[data-test="continue"]')
+CANCEL_BUTTON = (By.CSS_SELECTOR, '[data-test="cancel"]')
+FINISH_BUTTON = (By.CSS_SELECTOR, '[data-test="finish"]')
+ITEM_QUANTITY = (By.CSS_SELECTOR, '[data-test="item-quantity"]')
+SUBTOTAL_LABEL = (By.CSS_SELECTOR, '[data-test="subtotal-label"]')
+TAX_LABEL = (By.CSS_SELECTOR, '[data-test="tax-label"]')
+TOTAL_LABEL = (By.CSS_SELECTOR, '[data-test="total-label"]')
+COMPLETE_HEADER = (By.CSS_SELECTOR, '[data-test="complete-header"]')
 
 INVENTORY_ELEMENT = (By.ID, "inventory_container")
 # The clickable burger wrapper: react-burger-menu only opens on native mouse
@@ -129,6 +141,17 @@ def open_cart(driver: WebDriver) -> None:
 
 def cart_item_names(driver: WebDriver):
     return [item.text for item in driver.find_elements(*CART_ITEM_NAMES)]
+
+
+def go_to_checkout(driver: WebDriver) -> None:
+    js_click(driver, CHECKOUT_BUTTON)
+    wait(driver).until(EC.url_contains("checkout-step-one"))
+
+
+def fill_buyer_info(driver: WebDriver, first: str = "Fernando", last: str = "Verdus", postal: str = "1000") -> None:
+    driver.find_element(*FIRST_NAME_INPUT).send_keys(first)
+    driver.find_element(*LAST_NAME_INPUT).send_keys(last)
+    driver.find_element(*POSTAL_CODE_INPUT).send_keys(postal)
 
 
 def logout(driver: WebDriver) -> None:
