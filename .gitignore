@@ -1,0 +1,33 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Generated reports/evidence (recreated on every run)
+reports/screenshots/*.png
+reports/logs/*.log
+reports/reporte.html
+reports/assets/
+
+# Browser/driver binaries
+chromedriver*
+geckodriver*
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Secrets
+.env
