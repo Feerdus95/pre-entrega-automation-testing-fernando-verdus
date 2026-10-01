@@ -17,10 +17,10 @@ def test_successful_login(driver):
 @pytest.mark.parametrize(
     "username,password,expected_error",
     [
-        ("locked_out_user", "secret_sauce", "Sorry, this user has been locked out."),
-        ("standard_user", "wrong_password", "do not match any user"),
-        ("", "secret_sauce", "Username is required"),
-        ("standard_user", "", "Password is required"),
+        pytest.param("locked_out_user", "secret_sauce", "Sorry, this user has been locked out.", id="locked-out"),
+        pytest.param("standard_user", "wrong_password", "do not match any user", id="wrong-password"),
+        pytest.param("", "secret_sauce", "Username is required", id="empty-username"),
+        pytest.param("standard_user", "", "Password is required", id="empty-password"),
     ],
 )
 def test_login_failure_shows_error_banner(driver, username, password, expected_error):
