@@ -59,3 +59,10 @@ def test_delete_post(api_client):
     # JSONPlaceholder only simulates deletion, so the post is not checked as gone afterwards
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     assert _assert_json(response) == {}, f"Expected an empty object, got {response.text!r}"
+
+
+def test_get_missing_post_returns_404(api_client):
+    response = api_client.get("/posts/99999")
+
+    assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+    assert _assert_json(response) == {}, f"Expected an empty error object, got {response.text!r}"
