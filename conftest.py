@@ -14,6 +14,7 @@ ROOT = Path(__file__).parent
 SCREENSHOTS_DIR = ROOT / "reports" / "screenshots"
 LOG_FILE = ROOT / "reports" / "logs" / "test_execution.log"
 LOG_HANDLER = pytest.StashKey[logging.FileHandler]()
+TEST_RESULT = pytest.StashKey[str]()
 
 
 def pytest_sessionstart(session):
@@ -59,13 +60,22 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     logger = logging.getLogger("saucedemo")
-    if report.when == "call":
-        logger.info("RESULT %s: %s", report.nodeid, report.outcome.upper())
+    if report.failed:
+        logger.error("FAILURE DETAILS %s (%s): %s", report.nodeid, report.when, str(report.longrepr))
+        drv = item.funcargs.get("driver")
+        if drv and report.when == "call":
+            _attach_screenshot(item, report, drv, logger)
+    # One RESULT per test, logged after teardown so a setup or teardown
+    # error is not reported as the call outcome
+    if report.when == "setup" and not report.passed:
+        item.stash[TEST_RESULT] = "ERROR" if report.failed else "SKIPPED"
+    elif report.when == "call":
+        item.stash[TEST_RESULT] = report.outcome.upper()
+    elif report.when == "teardown":
+        result = item.stash.get(TEST_RESULT, "PASSED")
         if report.failed:
-            logger.error("FAILURE DETAILS %s: %s", report.nodeid, str(report.longrepr))
-            drv = item.funcargs.get("driver")
-            if drv:
-                _attach_screenshot(item, report, drv, logger)
+            result = "ERROR" if result == "PASSED" else f"{result} + teardown ERROR"
+        logger.info("RESULT %s: %s", report.nodeid, result)
 
 
 def _attach_screenshot(item, report, drv, logger):
