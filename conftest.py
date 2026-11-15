@@ -13,8 +13,9 @@ LOG_FILE = ROOT / "reports" / "logs" / "test_execution.log"
 
 @pytest.fixture(scope="session", autouse=True)
 def execution_logging():
+    # One log per run (mode "w"): the versioned file always reflects the last execution
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    handler = logging.FileHandler(LOG_FILE, mode="a", encoding="utf-8")
+    handler = logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8")
     handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
     logger = logging.getLogger("saucedemo")
     logger.setLevel(logging.INFO)
