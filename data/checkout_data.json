@@ -1,0 +1,13 @@
+{
+  "buyer": {
+    "first_name": "Fernando",
+    "last_name": "Verdus",
+    "postal_code": "1000"
+  },
+  "missing_postal_code": {
+    "first_name": "Fernando",
+    "last_name": "Verdus",
+    "postal_code": "",
+    "expected_error": "Postal Code is required"
+  }
+}
