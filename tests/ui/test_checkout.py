@@ -1,50 +1,52 @@
-from utils import helpers
+from pages.cart_page import CartPage
+from pages.checkout_page import CheckoutPage
+from pages.inventory_page import InventoryPage
+from pages.login_page import LoginPage
 
 
-def _add_one_product_and_open_checkout(driver):
-    helpers.login(driver)
-    helpers.add_first_product(driver)
-    helpers.open_cart(driver)
-    helpers.go_to_checkout(driver)
+def _add_one_product_and_open_checkout(driver) -> CheckoutPage:
+    LoginPage(driver).login()
+    inventory = InventoryPage(driver)
+    inventory.add_first_product()
+    inventory.header.open_cart()
+    CartPage(driver).go_to_checkout()
+    return CheckoutPage(driver)
 
 
 def test_checkout_completes_order(driver):
-    _add_one_product_and_open_checkout(driver)
-    helpers.fill_buyer_info(driver)
-    helpers.js_click(driver, helpers.CONTINUE_BUTTON)
-    helpers.wait(driver).until(helpers.EC.url_contains("checkout-step-two"))
+    checkout = _add_one_product_and_open_checkout(driver)
+    checkout.fill_buyer_info()
+    checkout.continue_to_overview()
 
-    assert helpers.element_visible(driver, helpers.ITEM_QUANTITY).text == "1", (
+    assert checkout.item_quantity() == "1", (
         "Expected one item in the checkout summary"
     )
-    assert helpers.element_visible(driver, helpers.SUBTOTAL_LABEL).text == "Item total: $29.99"
-    assert helpers.element_visible(driver, helpers.TAX_LABEL).text == "Tax: $2.40"
-    assert helpers.element_visible(driver, helpers.TOTAL_LABEL).text == "Total: $32.39"
+    assert checkout.subtotal() == "Item total: $29.99"
+    assert checkout.tax() == "Tax: $2.40"
+    assert checkout.total() == "Total: $32.39"
 
-    helpers.js_click(driver, helpers.FINISH_BUTTON)
-    helpers.wait(driver).until(helpers.EC.url_contains("checkout-complete"))
-    assert helpers.element_visible(driver, helpers.COMPLETE_HEADER).text == (
+    checkout.finish_order()
+    assert checkout.complete_header() == (
         "Thank you for your order!"
     )
 
 
 def test_checkout_requires_postal_code(driver):
-    _add_one_product_and_open_checkout(driver)
-    helpers.fill_buyer_info(driver, postal="")
-    helpers.js_click(driver, helpers.CONTINUE_BUTTON)
+    checkout = _add_one_product_and_open_checkout(driver)
+    checkout.fill_buyer_info(postal="")
+    checkout.click_continue()
 
-    banner = helpers.element_visible(driver, helpers.ERROR_BANNER)
-    assert "Postal Code is required" in banner.text, f"Found: {banner.text!r}"
+    banner = checkout.error_message()
+    assert "Postal Code is required" in banner, f"Found: {banner!r}"
     assert "checkout-step-two" not in driver.current_url, (
         "Checkout must not advance without a postal code"
     )
 
 
 def test_checkout_cancel_returns_to_cart(driver):
-    _add_one_product_and_open_checkout(driver)
-    helpers.js_click(driver, helpers.CANCEL_BUTTON)
+    checkout = _add_one_product_and_open_checkout(driver)
+    checkout.cancel()
 
-    helpers.wait(driver).until(helpers.EC.url_contains("/cart.html"))
-    assert helpers.cart_badge_value(driver) == "1", (
+    assert checkout.header.cart_badge_value() == "1", (
         "Cancelling checkout must leave the cart untouched"
     )
