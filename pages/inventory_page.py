@@ -65,6 +65,8 @@ class InventoryPage:
                 break
             except TimeoutException:
                 logger.warning("Cart badge absent after add click %d, retrying", attempt)
+        else:
+            raise TimeoutException(f"Cart badge never appeared after 3 add clicks on {name!r}")
         logger.info("Added first product to cart: %s", name)
         return name
 
