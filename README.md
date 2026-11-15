@@ -62,9 +62,16 @@ Chrome adecuado; no hace falta instalarlo a mano.
 │       ├── test_inventory.py  # Catálogo, ordenamiento y detalle de producto
 │       ├── test_cart.py       # Agregado al carrito
 │       └── test_checkout.py   # Checkout: resumen, validaciones y cancelación
+├── pages/                     # Page Objects: locators e interacciones por página
+│   ├── header.py              # Header compartido (título, carrito, menú, logout)
+│   ├── login_page.py
+│   ├── inventory_page.py
+│   ├── product_detail_page.py
+│   ├── cart_page.py
+│   └── checkout_page.py
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
-│   └── helpers.py             # Login, esperas, catálogo, carrito y checkout
+│   └── helpers.py             # Configuración, esperas explícitas y clicks compartidos
 ├── reports/
 │   ├── reporte.html           # Reporte HTML (última ejecución; se regenera)
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
