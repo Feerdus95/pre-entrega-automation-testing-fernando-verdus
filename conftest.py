@@ -13,10 +13,11 @@ from utils.driver import create_driver
 ROOT = Path(__file__).parent
 SCREENSHOTS_DIR = ROOT / "reports" / "screenshots"
 LOG_FILE = ROOT / "reports" / "logs" / "test_execution.log"
+LOG_HANDLER = pytest.StashKey[logging.FileHandler]()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def execution_logging():
+def pytest_sessionstart(session):
+    # Configured before any test starts, so the first START line is not lost.
     # One log per run (mode "w"): the versioned file always reflects the last execution
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     handler = logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8")
@@ -24,9 +25,14 @@ def execution_logging():
     logger = logging.getLogger("saucedemo")
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
-    yield
-    logger.removeHandler(handler)
-    handler.close()
+    session.config.stash[LOG_HANDLER] = handler
+
+
+def pytest_sessionfinish(session):
+    handler = session.config.stash.get(LOG_HANDLER, None)
+    if handler:
+        logging.getLogger("saucedemo").removeHandler(handler)
+        handler.close()
 
 
 def pytest_runtest_logstart(nodeid, location):
