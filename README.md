@@ -1,10 +1,16 @@
-# Pre-entrega Automation Testing — SauceDemo
+# QA Automation — SauceDemo UI + JSONPlaceholder API
 
-Proyecto de automatización de pruebas web para la aplicación de demostración
-[SauceDemo](https://www.saucedemo.com/) usando **Python + Pytest + Selenium
-WebDriver**. Cubre tres flujos: login exitoso, validación del catálogo de
-productos y agregado de un producto al carrito. Incluye además pruebas de API
-REST con **Requests** contra [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
+Framework de automatización de pruebas en **Python + Pytest** con dos suites:
+
+- **UI** (Selenium WebDriver) sobre la tienda de demostración
+  [SauceDemo](https://www.saucedemo.com/): login (positivo y negativos),
+  catálogo, ordenamiento, detalle de producto, carrito y checkout completo.
+- **API** (Requests) sobre la API pública de demostración
+  [JSONPlaceholder](https://jsonplaceholder.typicode.com/): GET, POST, DELETE
+  y un escenario de error.
+
+Cada ejecución produce un reporte HTML, un log de ejecución y, si falla un
+test de UI, una captura de pantalla embebida en el reporte.
 
 ## Tecnologías
 
@@ -19,10 +25,11 @@ REST con **Requests** contra [JSONPlaceholder](https://jsonplaceholder.typicode.
 
 ## Instalación
 
-Prerrequisitos: Python 3.x y Google Chrome instalados.
+Prerrequisitos: Python 3.x, Google Chrome y acceso a internet (ambas
+aplicaciones bajo prueba son servicios públicos en línea).
 
 ```bash
-git clone <URL-del-repo>
+git clone https://github.com/Feerdus95/pre-entrega-automation-testing-fernando-verdus.git
 cd pre-entrega-automation-testing-fernando-verdus
 python -m venv .venv
 ```
@@ -46,6 +53,7 @@ pip install -r requirements.txt
 pytest -v              # UI + API
 pytest -v tests/ui/    # solo UI (Selenium)
 pytest -v tests/api/   # solo API (no abre navegador)
+pytest -v tests/ui/test_login.py::test_successful_login   # un test puntual
 ```
 
 Cada ejecución genera además el reporte HTML `reports/reporte.html`: las
@@ -97,6 +105,14 @@ Chrome adecuado; no hace falta instalarlo a mano.
 ```
 
 ## Cobertura de pruebas
+
+| Suite | Funciones de test | Ejecuciones |
+|---|---|---|
+| UI | 10 | 13 (el login negativo se parametriza en 4 casos) |
+| API | 5 | 5 |
+| **Total** | **15** | **18** |
+
+### UI (SauceDemo)
 
 | Test | Qué valida |
 |---|---|
