@@ -1,10 +1,16 @@
-# Pre-entrega Automation Testing — SauceDemo
+# QA Automation — SauceDemo UI + JSONPlaceholder API
 
-Proyecto de automatización de pruebas web para la aplicación de demostración
-[SauceDemo](https://www.saucedemo.com/) usando **Python + Pytest + Selenium
-WebDriver**. Cubre tres flujos: login exitoso, validación del catálogo de
-productos y agregado de un producto al carrito. Incluye además pruebas de API
-REST con **Requests** contra [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
+Framework de automatización de pruebas en **Python + Pytest** con dos suites:
+
+- **UI** (Selenium WebDriver) sobre la tienda de demostración
+  [SauceDemo](https://www.saucedemo.com/): login (positivo y negativos),
+  catálogo, ordenamiento, detalle de producto, carrito y checkout completo.
+- **API** (Requests) sobre la API pública de demostración
+  [JSONPlaceholder](https://jsonplaceholder.typicode.com/): GET, POST, DELETE
+  y un escenario de error.
+
+Cada ejecución produce un reporte HTML, un log de ejecución y, si falla un
+test de UI, una captura de pantalla embebida en el reporte.
 
 ## Tecnologías
 
@@ -19,11 +25,12 @@ REST con **Requests** contra [JSONPlaceholder](https://jsonplaceholder.typicode.
 
 ## Instalación
 
-Prerrequisitos: Python 3.x y Google Chrome instalados.
+Prerrequisitos: Python 3.x, Google Chrome y acceso a internet (ambas
+aplicaciones bajo prueba son servicios públicos en línea).
 
 ```bash
-git clone <URL-del-repo>
-cd pre-entrega-automation-testing-fernando-verdus
+git clone https://github.com/Feerdus95/proyecto-final-automation-testing-fernando-verdus.git
+cd proyecto-final-automation-testing-fernando-verdus
 python -m venv .venv
 ```
 
@@ -46,6 +53,7 @@ pip install -r requirements.txt
 pytest -v              # UI + API
 pytest -v tests/ui/    # solo UI (Selenium)
 pytest -v tests/api/   # solo API (no abre navegador)
+pytest -v tests/ui/test_login.py::test_successful_login   # un test puntual
 ```
 
 Cada ejecución genera además el reporte HTML `reports/reporte.html`: las
@@ -98,6 +106,14 @@ Chrome adecuado; no hace falta instalarlo a mano.
 
 ## Cobertura de pruebas
 
+| Suite | Funciones de test | Ejecuciones |
+|---|---|---|
+| UI | 10 | 13 (el login negativo se parametriza en 4 casos) |
+| API | 5 | 5 |
+| **Total** | **15** | **18** |
+
+### UI (SauceDemo)
+
 | Test | Qué valida |
 |---|---|
 | `test_successful_login` | El usuario `standard_user` inicia sesión y llega a `/inventory.html`, con encabezado `Products` y título `Swag Labs` |
@@ -128,7 +144,39 @@ observado y no asumen persistencia.
 Cada test UI es independiente: abre su propio navegador, inicia sesión por su
 cuenta y cierra el navegador al terminar (fixture de alcance de test).
 
-## Decisiones de automatización
+## Datos de prueba externos
+
+Los datos de los escenarios viven en `data/` como JSON y se cargan con
+`utils/data_loader.py` (`load_json`), sin dependencia de Selenium.
+
+| Archivo | Estructura | Lo usa |
+|---|---|---|
+| `login_data.json` | `valid`: lista de `{id, username, password}`; `invalid`: lista de `{id, username, password, expected_error}` | `test_successful_login` y `test_login_failure_shows_error_banner` (parametrizados; `id` nombra cada caso en el reporte) |
+| `checkout_data.json` | `buyer`: `{first_name, last_name, postal_code}`; `missing_postal_code`: lo mismo con `postal_code` vacío y `expected_error` | Tests de checkout |
+| `api_data.json` | `new_post`: `{title, body, userId}` | `test_create_post` |
+
+Agregar un caso de login negativo es agregar un objeto a `invalid`: el test
+lo toma sin cambios de código.
+
+## Arquitectura
+
+- **Page Object Model** (`pages/`): cada página de SauceDemo es una clase con
+  sus locators y acciones (`LoginPage`, `InventoryPage`, `ProductDetailPage`,
+  `CartPage`, `CheckoutPage`). Los tests solo llaman acciones y hacen
+  aserciones; no contienen locators ni esperas de Selenium.
+- **Header como componente**: el encabezado común (título, carrito, menú,
+  logout) es la clase `Header`, que las páginas incluyen por composición
+  (`inventory.header.cart_badge_value()`), sin clases base.
+- **Separación de responsabilidades**:
+  - `tests/ui/` y `tests/api/`: escenarios y aserciones, cada suite ejecutable
+    por separado.
+  - `utils/`: infraestructura compartida (driver, esperas, cliente API,
+    carga de datos).
+  - `data/`: datos de prueba.
+  - `conftest.py`: fixtures (`driver` con un navegador nuevo por test,
+    `api_client`), logging y captura de fallos.
+
+### Decisiones de automatización
 
 - **Esperas explícitas** (`WebDriverWait` + `expected_conditions`) en toda
   interacción; un único timeout centralizado en `utils/helpers.py`.
@@ -161,6 +209,27 @@ cuenta y cierra el navegador al terminar (fixture de alcance de test).
   unavailable` / `External API unavailable`, incluye errores de conexión,
   timeouts y HTTP 5xx), status HTTP inesperado (esperado vs. recibido con la
   URL) y error de validación (esperado vs. encontrado).
+
+## Flujo de trabajo Git
+
+- `main` contiene solo trabajo integrado. Cada fase se desarrolló en su rama
+  (`feature/project-structure`, `feature/page-object-model`,
+  `feature/external-test-data`, `feature/api-testing`, `feature/reporting`,
+  `docs/final-delivery`) y entró por Pull Request con **merge commit**
+  (sin squash ni rebase), así el historial conserva cada commit y cada merge.
+- Commits en inglés con **Conventional Commits** (`feat`, `fix`, `test`,
+  `docs`, `refactor`, `build`, `chore`), título y cuerpo con viñetas.
+
+## Disponibilidad de servicios externos
+
+SauceDemo y JSONPlaceholder son servicios públicos de demostración que este
+proyecto no controla. Se asume que están en línea y que JSONPlaceholder
+mantiene sus datos de ejemplo (por ejemplo, 10 posts del usuario 1).
+
+Si alguno no responde, los tests **fallan** (nunca se omiten ni pasan) con un
+mensaje que nombra el servicio: `SauceDemo unavailable at ...` o
+`External API unavailable: <método> <URL> ...`. Así una caída externa se
+distingue de un defecto real (ver *Clasificación de fallas* arriba).
 
 ## Credenciales
 
