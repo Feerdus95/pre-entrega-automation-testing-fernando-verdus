@@ -2,6 +2,13 @@ from pages.cart_page import CartPage
 from pages.checkout_page import CheckoutPage
 from pages.inventory_page import InventoryPage
 from pages.login_page import LoginPage
+from utils.data_loader import load_json
+
+CHECKOUT_DATA = load_json("checkout_data.json")
+
+
+def _fill_buyer(checkout: CheckoutPage, buyer: dict) -> None:
+    checkout.fill_buyer_info(buyer["first_name"], buyer["last_name"], buyer["postal_code"])
 
 
 def _add_one_product_and_open_checkout(driver) -> CheckoutPage:
@@ -15,7 +22,7 @@ def _add_one_product_and_open_checkout(driver) -> CheckoutPage:
 
 def test_checkout_completes_order(driver):
     checkout = _add_one_product_and_open_checkout(driver)
-    checkout.fill_buyer_info()
+    _fill_buyer(checkout, CHECKOUT_DATA["buyer"])
     checkout.continue_to_overview()
 
     assert checkout.item_quantity() == "1", (
@@ -33,11 +40,12 @@ def test_checkout_completes_order(driver):
 
 def test_checkout_requires_postal_code(driver):
     checkout = _add_one_product_and_open_checkout(driver)
-    checkout.fill_buyer_info(postal="")
+    case = CHECKOUT_DATA["missing_postal_code"]
+    _fill_buyer(checkout, case)
     checkout.click_continue()
 
     banner = checkout.error_message()
-    assert "Postal Code is required" in banner, f"Found: {banner!r}"
+    assert case["expected_error"] in banner, f"Expected {case['expected_error']!r} in banner: {banner!r}"
     assert "checkout-step-two" not in driver.current_url, (
         "Checkout must not advance without a postal code"
     )

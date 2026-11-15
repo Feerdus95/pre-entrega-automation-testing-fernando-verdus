@@ -24,7 +24,7 @@ class CheckoutPage:
         self.driver = driver
         self.header = Header(driver)
 
-    def fill_buyer_info(self, first: str = "Fernando", last: str = "Verdus", postal: str = "1000") -> None:
+    def fill_buyer_info(self, first: str, last: str, postal: str) -> None:
         element_visible(self.driver, self.FIRST_NAME_INPUT).send_keys(first)
         element_visible(self.driver, self.LAST_NAME_INPUT).send_keys(last)
         element_visible(self.driver, self.POSTAL_CODE_INPUT).send_keys(postal)
