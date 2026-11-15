@@ -3,7 +3,8 @@
 Proyecto de automatización de pruebas web para la aplicación de demostración
 [SauceDemo](https://www.saucedemo.com/) usando **Python + Pytest + Selenium
 WebDriver**. Cubre tres flujos: login exitoso, validación del catálogo de
-productos y agregado de un producto al carrito.
+productos y agregado de un producto al carrito. Incluye además pruebas de API
+REST con **Requests** contra [JSONPlaceholder](https://jsonplaceholder.typicode.com/).
 
 ## Tecnologías
 
@@ -13,6 +14,7 @@ productos y agregado de un producto al carrito.
 | Pytest | Framework de tests y fixtures |
 | Selenium WebDriver | Automatización del navegador (Chrome) |
 | pytest-html | Reporte HTML de ejecución |
+| Requests | Pruebas de API REST |
 | Git / GitHub | Versionado y entrega |
 
 ## Instalación
@@ -41,7 +43,9 @@ pip install -r requirements.txt
 ## Ejecución de pruebas
 
 ```bash
-pytest -v
+pytest -v              # UI + API
+pytest -v tests/ui/    # solo UI (Selenium)
+pytest -v tests/api/   # solo API (no abre navegador)
 ```
 
 Con reporte HTML:
@@ -57,11 +61,13 @@ Chrome adecuado; no hace falta instalarlo a mano.
 
 ```text
 ├── tests/
-│   └── ui/                    # Pruebas de interfaz (Selenium)
-│       ├── test_login.py      # Login positivo, fallos con banner y sesión
-│       ├── test_inventory.py  # Catálogo, ordenamiento y detalle de producto
-│       ├── test_cart.py       # Agregado al carrito
-│       └── test_checkout.py   # Checkout: resumen, validaciones y cancelación
+│   ├── ui/                    # Pruebas de interfaz (Selenium)
+│   │   ├── test_login.py      # Login positivo, fallos con banner y sesión
+│   │   ├── test_inventory.py  # Catálogo, ordenamiento y detalle de producto
+│   │   ├── test_cart.py       # Agregado al carrito
+│   │   └── test_checkout.py   # Checkout: resumen, validaciones y cancelación
+│   └── api/                   # Pruebas de API (Requests)
+│       └── test_posts.py      # GET, POST, DELETE y error 404 sobre /posts
 ├── pages/                     # Page Objects: locators e interacciones por página
 │   ├── header.py              # Header compartido (título, carrito, menú, logout)
 │   ├── login_page.py
@@ -72,15 +78,17 @@ Chrome adecuado; no hace falta instalarlo a mano.
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
 │   ├── helpers.py             # Configuración, esperas explícitas y clicks compartidos
-│   └── data_loader.py         # Carga de datos de prueba desde data/
+│   ├── data_loader.py         # Carga de datos de prueba desde data/
+│   └── api_client.py          # Cliente HTTP de la API (Requests) con logging
 ├── data/                      # Datos de prueba externos (JSON)
 │   ├── login_data.json        # Casos de login válidos e inválidos con su error esperado
-│   └── checkout_data.json     # Datos del comprador y caso sin código postal
+│   ├── checkout_data.json     # Datos del comprador y caso sin código postal
+│   └── api_data.json          # Payload del POST de la API
 ├── reports/
 │   ├── reporte.html           # Reporte HTML (última ejecución; se regenera)
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
 │   └── logs/                  # test_execution.log (última ejecución)
-├── conftest.py                # Fixtures del navegador, logging y captura de fallos
+├── conftest.py                # Fixtures del navegador y cliente API, logging y captura de fallos
 ├── pytest.ini                 # Configuración de pytest (ruta de descubrimiento)
 ├── requirements.txt           # Dependencias
 └── README.md
@@ -101,7 +109,21 @@ Chrome adecuado; no hace falta instalarlo a mano.
 | `test_checkout_requires_postal_code` | Sin código postal, el banner "Postal Code is required" bloquea el paso 2 |
 | `test_checkout_cancel_returns_to_cart` | Cancelar en el paso 1 vuelve al carrito con el producto intacto |
 
-Cada test es independiente: abre su propio navegador, inicia sesión por su
+### API (JSONPlaceholder `/posts`)
+
+JSONPlaceholder simula las escrituras: POST y DELETE responden como si
+persistieran, pero no cambian los datos. Los tests validan el contrato
+observado y no asumen persistencia.
+
+| Test | Qué valida |
+|---|---|
+| `test_get_post_by_id` | GET `/posts/1`: 200, JSON, campos `userId`/`id`/`title`/`body` con sus tipos e `id == 1` |
+| `test_get_posts_filtered_by_user` | GET `/posts?userId=1`: 200, lista de 10 posts, todos del usuario 1 |
+| `test_create_post` | POST `/posts`: 201, devuelve los campos enviados y un `id` nuevo |
+| `test_delete_post` | DELETE `/posts/1`: 200 y objeto vacío (borrado simulado) |
+| `test_get_missing_post_returns_404` | GET `/posts/99999`: 404 con objeto JSON vacío (escenario de error) |
+
+Cada test UI es independiente: abre su propio navegador, inicia sesión por su
 cuenta y cierra el navegador al terminar (fixture de alcance de test).
 
 ## Decisiones de automatización
