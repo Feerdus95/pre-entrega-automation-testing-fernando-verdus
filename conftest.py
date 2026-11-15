@@ -84,3 +84,12 @@ def _attach_screenshot(item, report, drv, logger):
         extras.url(url, name="Page at failure"),
         extras.png(base64.b64encode(png).decode("ascii"), name=path.name),
     ]
+
+
+def pytest_html_results_table_header(cells):
+    cells.insert(1, "<th>Category</th>")
+
+
+def pytest_html_results_table_row(report, cells):
+    category = "API" if report.nodeid.startswith("tests/api/") else "UI"
+    cells.insert(1, f"<td>{category}</td>")
