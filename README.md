@@ -71,7 +71,11 @@ Chrome adecuado; no hace falta instalarlo a mano.
 │   └── checkout_page.py
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
-│   └── helpers.py             # Configuración, esperas explícitas y clicks compartidos
+│   ├── helpers.py             # Configuración, esperas explícitas y clicks compartidos
+│   └── data_loader.py         # Carga de datos de prueba desde data/
+├── data/                      # Datos de prueba externos (JSON)
+│   ├── login_data.json        # Casos de login válidos e inválidos con su error esperado
+│   └── checkout_data.json     # Datos del comprador y caso sin código postal
 ├── reports/
 │   ├── reporte.html           # Reporte HTML (última ejecución; se regenera)
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
