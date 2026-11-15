@@ -1,3 +1,7 @@
+from utils.data_loader import load_json
+
+API_DATA = load_json("api_data.json")
+
 POST_FIELDS = {"userId": int, "id": int, "title": str, "body": str}
 
 
@@ -36,3 +40,22 @@ def test_get_posts_filtered_by_user(api_client):
     for post in posts:
         _assert_post_shape(post)
         assert post["userId"] == 1, f"Filter leaked a post from user {post['userId']}"
+
+
+def test_create_post(api_client):
+    payload = API_DATA["new_post"]
+    response = api_client.post("/posts", json=payload)
+
+    assert response.status_code == 201, f"Expected 201, got {response.status_code}"
+    created = _assert_json(response)
+    _assert_post_shape(created)
+    for field, value in payload.items():
+        assert created[field] == value, f"Field {field!r}: sent {value!r}, got {created[field]!r}"
+
+
+def test_delete_post(api_client):
+    response = api_client.delete("/posts/1")
+
+    # JSONPlaceholder only simulates deletion, so the post is not checked as gone afterwards
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    assert _assert_json(response) == {}, f"Expected an empty object, got {response.text!r}"
