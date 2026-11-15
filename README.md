@@ -48,10 +48,12 @@ pytest -v tests/ui/    # solo UI (Selenium)
 pytest -v tests/api/   # solo API (no abre navegador)
 ```
 
-Con reporte HTML:
+Cada ejecución genera además el reporte HTML `reports/reporte.html`: las
+opciones están en `pytest.ini` (`--html=reports/reporte.html --self-contained-html`).
+El comando explícito equivalente es:
 
 ```bash
-pytest -v --html=reports/reporte.html
+pytest -v --html=reports/reporte.html --self-contained-html
 ```
 
 Selenium Manager (incluido en Selenium) descarga automáticamente el driver de
@@ -89,7 +91,7 @@ Chrome adecuado; no hace falta instalarlo a mano.
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
 │   └── logs/                  # test_execution.log (última ejecución)
 ├── conftest.py                # Fixtures del navegador y cliente API, logging y captura de fallos
-├── pytest.ini                 # Configuración de pytest (ruta de descubrimiento)
+├── pytest.ini                 # Configuración de pytest (descubrimiento y reporte HTML)
 ├── requirements.txt           # Dependencias
 └── README.md
 ```
@@ -140,15 +142,25 @@ cuenta y cierra el navegador al terminar (fixture de alcance de test).
 
 ## Reportes y evidencia
 
-- **Reporte HTML:** `reports/reporte.html` (estados por test, tiempos, detalles
-  de fallo). Se incluye en el repositorio la última ejecución como evidencia;
-  cada corrida lo regenera.
-- **Capturas de fallo:** `reports/screenshots/test_<nombre>.png` — se generan
-  automáticamente solo cuando un test falla (no hay capturas en la última
-  ejecución porque los tres tests pasaron).
-- **Logs de ejecución:** `reports/logs/test_execution.log` — inicio de cada
-  test, acciones principales y resultado. Se incluye la última corrida como
-  evidencia. Las contraseñas nunca se escriben en el log.
+- **Reporte HTML:** `reports/reporte.html`, autocontenido (se puede mover o
+  compartir sin perder imágenes). Muestra estado, categoría **UI** o **API**,
+  duración y detalle de fallo de cada test. Se incluye la última ejecución
+  como evidencia; cada corrida lo regenera.
+- **Capturas de fallo:** `reports/screenshots/<test>_<AAAAMMDD_HHMMSS>.png`.
+  Se toman automáticamente solo cuando falla un test de UI, se embeben en la
+  entrada del reporte junto con la URL de la página y no se pisan entre
+  corridas. Los caracteres no válidos en nombres de archivo (p. ej. los `[ ]`
+  de los tests parametrizados) se reemplazan por `-`. Si la captura falla, se
+  registra en el log y el test conserva su falla original.
+- **Logs de ejecución:** `reports/logs/test_execution.log`, se sobrescribe en
+  cada corrida. Registra inicio de cada test, acciones principales de UI,
+  cada request de API (método, URL y status) y el resultado. Las contraseñas
+  nunca se escriben en el log.
+- **Clasificación de fallas:** ninguna falla se omite ni se convierte en
+  aprobada. El mensaje distingue servicio no disponible (`SauceDemo
+  unavailable` / `External API unavailable`, incluye errores de conexión,
+  timeouts y HTTP 5xx), status HTTP inesperado (esperado vs. recibido con la
+  URL) y error de validación (esperado vs. encontrado).
 
 ## Credenciales
 
