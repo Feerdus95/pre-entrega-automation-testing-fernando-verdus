@@ -82,6 +82,20 @@ def element_visible(driver: WebDriver, locator: tuple) -> WebElement:
     return wait(driver).until(EC.visibility_of_element_located(locator))
 
 
+def is_visible(driver: WebDriver, locator: tuple) -> bool:
+    """Same wait as element_visible, but answers instead of raising, for assertions."""
+    try:
+        element_visible(driver, locator)
+        return True
+    except TimeoutException:
+        return False
+
+
+def error_text(driver: WebDriver) -> str:
+    # The error banner shares one markup across login and checkout forms
+    return element_visible(driver, ERROR_BANNER).text
+
+
 def js_click(driver: WebDriver, locator: tuple) -> None:
     # Native clicks are occasionally dropped before React's synthetic-event
     # system is listening (screenshot evidence: UI stays unchanged, no error).
