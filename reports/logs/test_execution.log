@@ -1,74 +1,74 @@
-2026-11-15 12:20:58,184 INFO START tests/api/test_posts.py::test_get_post_by_id
-2026-11-15 12:20:58,641 INFO API GET https://jsonplaceholder.typicode.com/posts/1 -> 200
-2026-11-15 12:20:58,641 INFO RESULT tests/api/test_posts.py::test_get_post_by_id: PASSED
-2026-11-15 12:20:58,643 INFO START tests/api/test_posts.py::test_get_posts_filtered_by_user
-2026-11-15 12:20:59,070 INFO API GET https://jsonplaceholder.typicode.com/posts?userId=1 -> 200
-2026-11-15 12:20:59,070 INFO RESULT tests/api/test_posts.py::test_get_posts_filtered_by_user: PASSED
-2026-11-15 12:20:59,072 INFO START tests/api/test_posts.py::test_create_post
-2026-11-15 12:20:59,640 INFO API POST https://jsonplaceholder.typicode.com/posts -> 201
-2026-11-15 12:20:59,640 INFO RESULT tests/api/test_posts.py::test_create_post: PASSED
-2026-11-15 12:20:59,642 INFO START tests/api/test_posts.py::test_delete_post
-2026-11-15 12:21:00,203 INFO API DELETE https://jsonplaceholder.typicode.com/posts/1 -> 200
-2026-11-15 12:21:00,203 INFO RESULT tests/api/test_posts.py::test_delete_post: PASSED
-2026-11-15 12:21:00,205 INFO START tests/api/test_posts.py::test_get_missing_post_returns_404
-2026-11-15 12:21:00,689 INFO API GET https://jsonplaceholder.typicode.com/posts/99999 -> 404
-2026-11-15 12:21:00,689 INFO RESULT tests/api/test_posts.py::test_get_missing_post_returns_404: PASSED
-2026-11-15 12:21:00,691 INFO START tests/ui/test_cart.py::test_add_first_product_to_cart
-2026-11-15 12:21:01,121 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:01,604 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:01,668 INFO Added first product to cart: Sauce Labs Backpack
-2026-11-15 12:21:01,699 INFO Cart page opened: https://www.saucedemo.com/cart.html
-2026-11-15 12:21:01,719 INFO RESULT tests/ui/test_cart.py::test_add_first_product_to_cart: PASSED
-2026-11-15 12:21:03,859 INFO START tests/ui/test_checkout.py::test_checkout_completes_order
-2026-11-15 12:21:04,306 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:04,847 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:04,914 INFO Added first product to cart: Sauce Labs Backpack
-2026-11-15 12:21:04,936 INFO Cart page opened: https://www.saucedemo.com/cart.html
-2026-11-15 12:21:05,205 INFO RESULT tests/ui/test_checkout.py::test_checkout_completes_order: PASSED
-2026-11-15 12:21:07,350 INFO START tests/ui/test_checkout.py::test_checkout_requires_postal_code
-2026-11-15 12:21:07,793 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:08,281 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:08,346 INFO Added first product to cart: Sauce Labs Backpack
-2026-11-15 12:21:08,369 INFO Cart page opened: https://www.saucedemo.com/cart.html
-2026-11-15 12:21:08,524 INFO RESULT tests/ui/test_checkout.py::test_checkout_requires_postal_code: PASSED
-2026-11-15 12:21:10,670 INFO START tests/ui/test_checkout.py::test_checkout_cancel_returns_to_cart
-2026-11-15 12:21:11,102 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:11,655 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:11,720 INFO Added first product to cart: Sauce Labs Backpack
-2026-11-15 12:21:11,742 INFO Cart page opened: https://www.saucedemo.com/cart.html
-2026-11-15 12:21:11,797 INFO RESULT tests/ui/test_checkout.py::test_checkout_cancel_returns_to_cart: PASSED
-2026-11-15 12:21:13,952 INFO START tests/ui/test_inventory.py::test_inventory_catalog
-2026-11-15 12:21:14,401 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:14,919 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:15,038 INFO First product: Sauce Labs Backpack - $29.99
-2026-11-15 12:21:15,039 INFO RESULT tests/ui/test_inventory.py::test_inventory_catalog: PASSED
-2026-11-15 12:21:17,195 INFO START tests/ui/test_inventory.py::test_product_sorting
-2026-11-15 12:21:17,639 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:18,132 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:18,452 INFO RESULT tests/ui/test_inventory.py::test_product_sorting: PASSED
-2026-11-15 12:21:20,597 INFO START tests/ui/test_inventory.py::test_product_detail_page_matches_catalog
-2026-11-15 12:21:21,053 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:22,630 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:22,684 INFO First product: Sauce Labs Backpack - $29.99
-2026-11-15 12:21:22,782 INFO RESULT tests/ui/test_inventory.py::test_product_detail_page_matches_catalog: PASSED
-2026-11-15 12:21:24,930 INFO START tests/ui/test_login.py::test_successful_login[default-account]
-2026-11-15 12:21:25,396 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:25,935 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:25,955 INFO RESULT tests/ui/test_login.py::test_successful_login[default-account]: PASSED
-2026-11-15 12:21:28,100 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[locked-out]
-2026-11-15 12:21:28,567 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:29,045 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[locked-out]: PASSED
-2026-11-15 12:21:31,188 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[wrong-password]
-2026-11-15 12:21:31,647 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:32,109 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[wrong-password]: PASSED
-2026-11-15 12:21:34,263 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-username]
-2026-11-15 12:21:34,725 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:35,212 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-username]: PASSED
-2026-11-15 12:21:37,364 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-password]
-2026-11-15 12:21:37,816 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:38,271 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-password]: PASSED
-2026-11-15 12:21:40,418 INFO START tests/ui/test_login.py::test_back_button_after_logout_does_not_restore_session
-2026-11-15 12:21:40,851 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:21:41,365 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:21:41,941 INFO Logged out
-2026-11-15 12:21:41,962 INFO RESULT tests/ui/test_login.py::test_back_button_after_logout_does_not_restore_session: PASSED
+2026-11-15 12:34:19,513 INFO START tests/api/test_posts.py::test_get_post_by_id
+2026-11-15 12:34:19,958 INFO API GET https://jsonplaceholder.typicode.com/posts/1 -> 200
+2026-11-15 12:34:19,959 INFO RESULT tests/api/test_posts.py::test_get_post_by_id: PASSED
+2026-11-15 12:34:19,961 INFO START tests/api/test_posts.py::test_get_posts_filtered_by_user
+2026-11-15 12:34:20,418 INFO API GET https://jsonplaceholder.typicode.com/posts?userId=1 -> 200
+2026-11-15 12:34:20,418 INFO RESULT tests/api/test_posts.py::test_get_posts_filtered_by_user: PASSED
+2026-11-15 12:34:20,420 INFO START tests/api/test_posts.py::test_create_post
+2026-11-15 12:34:21,014 INFO API POST https://jsonplaceholder.typicode.com/posts -> 201
+2026-11-15 12:34:21,014 INFO RESULT tests/api/test_posts.py::test_create_post: PASSED
+2026-11-15 12:34:21,016 INFO START tests/api/test_posts.py::test_delete_post
+2026-11-15 12:34:21,580 INFO API DELETE https://jsonplaceholder.typicode.com/posts/1 -> 200
+2026-11-15 12:34:21,581 INFO RESULT tests/api/test_posts.py::test_delete_post: PASSED
+2026-11-15 12:34:21,583 INFO START tests/api/test_posts.py::test_get_missing_post_returns_404
+2026-11-15 12:34:22,015 INFO API GET https://jsonplaceholder.typicode.com/posts/99999 -> 404
+2026-11-15 12:34:22,016 INFO RESULT tests/api/test_posts.py::test_get_missing_post_returns_404: PASSED
+2026-11-15 12:34:22,017 INFO START tests/ui/test_cart.py::test_add_first_product_to_cart
+2026-11-15 12:34:22,487 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:22,856 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:22,918 INFO Added first product to cart: Sauce Labs Backpack
+2026-11-15 12:34:22,950 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-11-15 12:34:22,969 INFO RESULT tests/ui/test_cart.py::test_add_first_product_to_cart: PASSED
+2026-11-15 12:34:25,123 INFO START tests/ui/test_checkout.py::test_checkout_completes_order
+2026-11-15 12:34:25,566 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:27,128 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:27,193 INFO Added first product to cart: Sauce Labs Backpack
+2026-11-15 12:34:27,217 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-11-15 12:34:27,454 INFO RESULT tests/ui/test_checkout.py::test_checkout_completes_order: PASSED
+2026-11-15 12:34:29,601 INFO START tests/ui/test_checkout.py::test_checkout_requires_postal_code
+2026-11-15 12:34:30,059 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:30,552 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:30,617 INFO Added first product to cart: Sauce Labs Backpack
+2026-11-15 12:34:30,640 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-11-15 12:34:30,800 INFO RESULT tests/ui/test_checkout.py::test_checkout_requires_postal_code: PASSED
+2026-11-15 12:34:32,956 INFO START tests/ui/test_checkout.py::test_checkout_cancel_returns_to_cart
+2026-11-15 12:34:33,415 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:33,913 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:33,979 INFO Added first product to cart: Sauce Labs Backpack
+2026-11-15 12:34:34,001 INFO Cart page opened: https://www.saucedemo.com/cart.html
+2026-11-15 12:34:34,051 INFO RESULT tests/ui/test_checkout.py::test_checkout_cancel_returns_to_cart: PASSED
+2026-11-15 12:34:36,205 INFO START tests/ui/test_inventory.py::test_inventory_catalog
+2026-11-15 12:34:36,669 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:37,161 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:37,264 INFO First product: Sauce Labs Backpack - $29.99
+2026-11-15 12:34:37,264 INFO RESULT tests/ui/test_inventory.py::test_inventory_catalog: PASSED
+2026-11-15 12:34:39,411 INFO START tests/ui/test_inventory.py::test_product_sorting
+2026-11-15 12:34:39,847 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:40,344 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:40,664 INFO RESULT tests/ui/test_inventory.py::test_product_sorting: PASSED
+2026-11-15 12:34:42,818 INFO START tests/ui/test_inventory.py::test_product_detail_page_matches_catalog
+2026-11-15 12:34:43,259 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:43,757 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:43,807 INFO First product: Sauce Labs Backpack - $29.99
+2026-11-15 12:34:43,904 INFO RESULT tests/ui/test_inventory.py::test_product_detail_page_matches_catalog: PASSED
+2026-11-15 12:34:46,055 INFO START tests/ui/test_login.py::test_successful_login[default-account]
+2026-11-15 12:34:46,499 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:46,979 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:46,998 INFO RESULT tests/ui/test_login.py::test_successful_login[default-account]: PASSED
+2026-11-15 12:34:49,150 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[locked-out]
+2026-11-15 12:34:49,600 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:50,055 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[locked-out]: PASSED
+2026-11-15 12:34:52,208 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[wrong-password]
+2026-11-15 12:34:52,649 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:53,084 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[wrong-password]: PASSED
+2026-11-15 12:34:55,231 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-username]
+2026-11-15 12:34:55,684 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:57,173 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-username]: PASSED
+2026-11-15 12:34:59,319 INFO START tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-password]
+2026-11-15 12:34:59,762 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:35:00,226 INFO RESULT tests/ui/test_login.py::test_login_failure_shows_error_banner[empty-password]: PASSED
+2026-11-15 12:35:02,375 INFO START tests/ui/test_login.py::test_back_button_after_logout_does_not_restore_session
+2026-11-15 12:35:02,818 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:35:03,343 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:35:03,914 INFO Logged out
+2026-11-15 12:35:03,935 INFO RESULT tests/ui/test_login.py::test_back_button_after_logout_does_not_restore_session: PASSED
