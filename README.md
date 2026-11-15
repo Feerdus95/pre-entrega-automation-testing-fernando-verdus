@@ -210,6 +210,51 @@ lo toma sin cambios de código.
   timeouts y HTTP 5xx), status HTTP inesperado (esperado vs. recibido con la
   URL) y error de validación (esperado vs. encontrado).
 
+### Cómo interpretar los resultados
+
+**1. Resumen en la consola.** La última línea de `pytest -v` resume la
+corrida, por ejemplo `18 passed in 46.75s`. Si algo falla, aparece
+`N failed` y, arriba, un bloque `FAILED <test>` con el motivo.
+
+**2. Reporte HTML.** Abrir `reports/reporte.html` en el navegador.
+
+- Arriba, **Summary** muestra cuántos tests pasaron, fallaron o dieron
+  error. Cada contador es también un filtro: destildar *Passed* deja a la
+  vista solo los fallos.
+- La tabla tiene una fila por ejecución, con **Result** (Passed/Failed),
+  **Category** (UI o API), nombre del test (los casos parametrizados llevan
+  su id entre corchetes, p. ej. `[locked-out]`) y **Duration**.
+- Las filas fallidas se muestran desplegadas (cualquier fila se abre o
+  cierra con un clic). El detalle incluye la línea del test que falló, el
+  mensaje de error y, si es de UI, la **captura de pantalla** del momento de
+  la falla y el link *Page at failure* con la URL donde estaba el navegador.
+
+**3. Qué significa el mensaje de falla.**
+
+| El mensaje dice | Significa | Qué hacer |
+|---|---|---|
+| `SauceDemo unavailable ...` o `External API unavailable ...` | El servicio externo no respondió (sin conexión, timeout o HTTP 5xx) | Revisar la conexión o reintentar más tarde; no es un defecto del sitio ni de los tests |
+| `Unexpected HTTP status for GET <URL>: expected 200, got 404` | La API respondió, pero con otro status que el del contrato | Revisar si cambió el contrato de la API |
+| `Expected ..., found ...` / `Element (...) not visible after 10s` | La aplicación respondió, pero distinto de lo esperado | Mirar la captura y el detalle: es un posible defecto o un cambio en la página |
+
+**4. Log de ejecución.** `reports/logs/test_execution.log` cuenta la
+corrida paso a paso, en orden. Cada test empieza con `START` y termina con
+`RESULT`; en el medio están sus acciones:
+
+```text
+2026-11-15 12:34:19,513 INFO START tests/api/test_posts.py::test_get_post_by_id
+2026-11-15 12:34:19,958 INFO API GET https://jsonplaceholder.typicode.com/posts/1 -> 200
+2026-11-15 12:34:19,959 INFO RESULT tests/api/test_posts.py::test_get_post_by_id: PASSED
+...
+2026-11-15 12:34:22,487 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 12:34:22,856 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 12:34:22,918 INFO Added first product to cart: Sauce Labs Backpack
+```
+
+Ante un fallo, el log agrega una línea `ERROR FAILURE DETAILS` con el error
+completo y `Screenshot saved: <ruta> (page: <URL>)` con la ubicación de la
+captura.
+
 ## Flujo de trabajo Git
 
 - `main` contiene solo trabajo integrado. Cada fase se desarrolló en su rama
