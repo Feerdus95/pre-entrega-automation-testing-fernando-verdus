@@ -57,10 +57,11 @@ Chrome adecuado; no hace falta instalarlo a mano.
 
 ```text
 ├── tests/
-│   ├── test_login.py          # Login positivo, fallos con banner y sesión
-│   ├── test_inventory.py      # Catálogo, ordenamiento y detalle de producto
-│   ├── test_cart.py           # Agregado al carrito
-│   └── test_checkout.py       # Checkout: resumen, validaciones y cancelación
+│   └── ui/                    # Pruebas de interfaz (Selenium)
+│       ├── test_login.py      # Login positivo, fallos con banner y sesión
+│       ├── test_inventory.py  # Catálogo, ordenamiento y detalle de producto
+│       ├── test_cart.py       # Agregado al carrito
+│       └── test_checkout.py   # Checkout: resumen, validaciones y cancelación
 ├── utils/
 │   ├── driver.py              # Creación/configuración del WebDriver
 │   └── helpers.py             # Login, esperas, catálogo, carrito y checkout
@@ -69,6 +70,7 @@ Chrome adecuado; no hace falta instalarlo a mano.
 │   ├── screenshots/           # Capturas automáticas de fallos (generado)
 │   └── logs/                  # test_execution.log (última ejecución)
 ├── conftest.py                # Fixtures del navegador, logging y captura de fallos
+├── pytest.ini                 # Configuración de pytest (ruta de descubrimiento)
 ├── requirements.txt           # Dependencias
 └── README.md
 ```
