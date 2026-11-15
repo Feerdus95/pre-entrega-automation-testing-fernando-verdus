@@ -25,7 +25,8 @@ test de UI, una captura de pantalla embebida en el reporte.
 
 ## Instalación
 
-Prerrequisitos: Python 3.x, Google Chrome y acceso a internet (ambas
+Prerrequisitos: Python 3.10 o superior (lo exigen las versiones actuales de
+pytest, Selenium y Requests), Google Chrome y acceso a internet (ambas
 aplicaciones bajo prueba son servicios públicos en línea).
 
 ```bash
@@ -36,9 +37,16 @@ python -m venv .venv
 
 Activar el entorno virtual:
 
+Windows (PowerShell):
+
 ```powershell
-.venv\Scripts\Activate.ps1    # Windows PowerShell
-source .venv/bin/activate     # macOS / Linux
+.venv\Scripts\Activate.ps1
+```
+
+macOS / Linux (bash/zsh):
+
+```bash
+source .venv/bin/activate
 ```
 
 Instalar dependencias:
@@ -141,8 +149,10 @@ observado y no asumen persistencia.
 | `test_delete_post` | DELETE `/posts/1`: 200 y objeto vacío (borrado simulado) |
 | `test_get_missing_post_returns_404` | GET `/posts/99999`: 404 con objeto JSON vacío (escenario de error) |
 
-Cada test UI es independiente: abre su propio navegador, inicia sesión por su
-cuenta y cierra el navegador al terminar (fixture de alcance de test).
+Cada test UI es independiente: abre su propio navegador, prepara por su
+cuenta el estado que necesita (los escenarios autenticados hacen su propio
+login; los de login fallido parten de la pantalla de login) y cierra el
+navegador al terminar (fixture de alcance de test).
 
 ## Datos de prueba externos
 
@@ -239,20 +249,23 @@ corrida, por ejemplo `18 passed in 46.75s`. Si algo falla, aparece
 
 **4. Log de ejecución.** `reports/logs/test_execution.log` cuenta la
 corrida paso a paso, en orden. Cada test empieza con `START` y termina con
-`RESULT`; en el medio están sus acciones:
+una única línea `RESULT`, escrita después del cierre del test, con el
+resultado final: `PASSED`, `FAILED` o `ERROR` (falla en la preparación o en
+el cierre, por ejemplo al cerrar el navegador). En el medio están sus
+acciones:
 
 ```text
-2026-11-15 12:34:19,513 INFO START tests/api/test_posts.py::test_get_post_by_id
-2026-11-15 12:34:19,958 INFO API GET https://jsonplaceholder.typicode.com/posts/1 -> 200
-2026-11-15 12:34:19,959 INFO RESULT tests/api/test_posts.py::test_get_post_by_id: PASSED
+2026-11-15 13:29:17,560 INFO START tests/api/test_posts.py::test_get_post_by_id
+2026-11-15 13:29:18,111 INFO API GET https://jsonplaceholder.typicode.com/posts/1 -> 200
+2026-11-15 13:29:18,112 INFO RESULT tests/api/test_posts.py::test_get_post_by_id: PASSED
 ...
-2026-11-15 12:34:22,487 INFO Opening login page: https://www.saucedemo.com/
-2026-11-15 12:34:22,856 INFO Login succeeded for user 'standard_user' (password not logged)
-2026-11-15 12:34:22,918 INFO Added first product to cart: Sauce Labs Backpack
+2026-11-15 13:29:20,639 INFO Opening login page: https://www.saucedemo.com/
+2026-11-15 13:29:22,286 INFO Login succeeded for user 'standard_user' (password not logged)
+2026-11-15 13:29:22,354 INFO Added first product to cart: Sauce Labs Backpack
 ```
 
-Ante un fallo, el log agrega una línea `ERROR FAILURE DETAILS` con el error
-completo y `Screenshot saved: <ruta> (page: <URL>)` con la ubicación de la
+Ante un fallo, el log agrega una línea `ERROR FAILURE DETAILS` con la fase
+(`setup`, `call` o `teardown`) y el error completo y `Screenshot saved: <ruta> (page: <URL>)` con la ubicación de la
 captura.
 
 ## Flujo de trabajo Git
