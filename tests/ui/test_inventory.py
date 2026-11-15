@@ -1,30 +1,32 @@
-from selenium.webdriver.support.ui import Select
-
-from utils import helpers
+from pages.inventory_page import InventoryPage
+from pages.login_page import LoginPage
+from pages.product_detail_page import ProductDetailPage
 
 
 def test_inventory_catalog(driver):
-    helpers.login(driver)
+    LoginPage(driver).login()
+    inventory = InventoryPage(driver)
 
     assert driver.title == "Swag Labs", f"Expected page title 'Swag Labs', found: '{driver.title}'"
 
-    products = helpers.inventory_products(driver)
+    products = inventory.products()
     assert len(products) > 0, "Expected at least one product visible in the inventory"
 
-    for label, locator in [
-        ("main navigation menu", helpers.NAV_MENU),
-        ("shopping cart", helpers.CART_LINK),
-        ("product sort control", helpers.SORT_DROPDOWN),
+    for label, visible in [
+        ("main navigation menu", inventory.header.is_menu_visible()),
+        ("shopping cart", inventory.header.is_cart_link_visible()),
+        ("product sort control", inventory.is_sort_control_visible()),
     ]:
-        assert helpers.element_visible(driver, locator), f"Expected {label} to be visible"
+        assert visible, f"Expected {label} to be visible"
 
-    first_name, first_price = helpers.first_product_details(driver)
+    first_name, first_price = inventory.first_product_details()
     assert first_name.strip(), f"Expected non-empty product name, found: '{first_name}'"
     assert first_price.strip(), f"Expected non-empty product price, found: '{first_price}'"
 
 
 def test_product_sorting(driver):
-    helpers.login(driver)
+    LoginPage(driver).login()
+    inventory = InventoryPage(driver)
 
     expected_first = {
         "Name (A to Z)": "Sauce Labs Backpack",
@@ -33,24 +35,24 @@ def test_product_sorting(driver):
         "Price (high to low)": "Sauce Labs Fleece Jacket",
     }
     for option, first_product in expected_first.items():
-        dropdown = Select(helpers.element_visible(driver, helpers.SORT_DROPDOWN))
-        dropdown.select_by_visible_text(option)
-        helpers.wait_first_product_name(driver, first_product)
-        names = [e.text for e in driver.find_elements(*helpers.PRODUCT_NAME)]
+        inventory.sort_by(option)
+        inventory.wait_first_product_name(first_product)
+        names = inventory.product_names()
         assert names[0] == first_product, (
             f"{option}: expected {first_product!r} first, found {names[0]!r}"
         )
 
 
 def test_product_detail_page_matches_catalog(driver):
-    helpers.login(driver)
-    catalog_name, catalog_price = helpers.first_product_details(driver)
+    LoginPage(driver).login()
+    inventory = InventoryPage(driver)
+    catalog_name, catalog_price = inventory.first_product_details()
 
-    helpers.js_click(driver, helpers.FIRST_PRODUCT_NAME)
-    helpers.wait(driver).until(helpers.EC.url_contains("inventory-item.html"))
+    inventory.open_first_product_detail()
+    detail = ProductDetailPage(driver)
 
-    detail_name = helpers.element_visible(driver, helpers.PRODUCT_NAME).text
-    detail_price = helpers.element_visible(driver, helpers.PRODUCT_PRICE).text
+    detail_name = detail.name()
+    detail_price = detail.price()
     assert detail_name == catalog_name, (
         f"Detail name {detail_name!r} differs from catalog {catalog_name!r}"
     )
@@ -58,12 +60,12 @@ def test_product_detail_page_matches_catalog(driver):
         f"Detail price {detail_price!r} differs from catalog {catalog_price!r}"
     )
 
-    helpers.js_click(driver, helpers.DETAIL_ADD_BUTTON)
-    assert helpers.cart_badge_value(driver) == "1", (
+    detail.add_to_cart()
+    assert detail.header.cart_badge_value() == "1", (
         "Expected badge '1' after adding from the detail page"
     )
     driver.back()
-    helpers.wait(driver).until(helpers.EC.url_contains("inventory.html"))
-    assert helpers.cart_badge_value(driver) == "1", (
+    inventory.wait_until_loaded()
+    assert inventory.header.cart_badge_value() == "1", (
         "Cart badge must persist after navigating back from the detail page"
     )
