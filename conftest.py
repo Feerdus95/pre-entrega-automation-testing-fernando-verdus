@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from utils.api_client import ApiClient
 from utils.driver import create_driver
 
 ROOT = Path(__file__).parent
@@ -33,6 +34,13 @@ def driver():
     drv = create_driver()
     yield drv
     drv.quit()
+
+
+@pytest.fixture
+def api_client():
+    client = ApiClient()
+    yield client
+    client.close()
 
 
 @pytest.hookimpl(hookwrapper=True)
