@@ -11,7 +11,7 @@ API_TIMEOUT = 10
 class ApiClient:
     """Thin wrapper over requests: returns the raw Response, never raises on HTTP errors.
 
-    Connection errors and timeouts propagate from requests; their message names the host.
+    Connection errors and timeouts raise ConnectionError naming the service and request.
     """
 
     def __init__(self, base_url: str = API_BASE_URL):
@@ -19,9 +19,15 @@ class ApiClient:
         self.session = requests.Session()
 
     def request(self, method: str, path: str, **kwargs) -> requests.Response:
-        response = self.session.request(
-            method, f"{self.base_url}{path}", timeout=API_TIMEOUT, **kwargs
-        )
+        url = f"{self.base_url}{path}"
+        try:
+            response = self.session.request(method, url, timeout=API_TIMEOUT, **kwargs)
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            # Connectivity problems fail with a message naming the external service
+            logger.error("API %s %s -> unavailable: %s", method, url, type(exc).__name__)
+            raise ConnectionError(
+                f"External API unavailable: {method} {url} ({type(exc).__name__}: {exc})"
+            ) from exc
         # response.url includes the encoded query string sent in params
         logger.info("API %s %s -> %s", method, response.url, response.status_code)
         return response

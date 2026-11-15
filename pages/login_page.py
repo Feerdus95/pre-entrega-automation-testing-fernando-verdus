@@ -1,3 +1,4 @@
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 
 from pages.inventory_page import InventoryPage
@@ -14,7 +15,11 @@ class LoginPage:
 
     def open(self) -> None:
         logger.info("Opening login page: %s", BASE_URL)
-        self.driver.get(BASE_URL)
+        try:
+            self.driver.get(BASE_URL)
+        except WebDriverException as exc:
+            # Navigation errors (DNS, refused connection) name the site instead of a raw driver error
+            raise ConnectionError(f"SauceDemo unavailable at {BASE_URL}: {exc.msg}") from exc
 
     def submit(self, username: str, password: str) -> None:
         element_visible(self.driver, self.USERNAME_INPUT).send_keys(username)

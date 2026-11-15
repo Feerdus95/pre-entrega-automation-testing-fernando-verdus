@@ -5,6 +5,16 @@ API_DATA = load_json("api_data.json")
 POST_FIELDS = {"userId": int, "id": int, "title": str, "body": str}
 
 
+def _assert_status(response, expected):
+    actual = response.status_code
+    request = f"{response.request.method} {response.url}"
+    if actual >= 500:
+        message = f"External API unavailable: {request} returned HTTP {actual}"
+    else:
+        message = f"Unexpected HTTP status for {request}: expected {expected}, got {actual}"
+    assert actual == expected, message
+
+
 def _assert_json(response):
     content_type = response.headers.get("Content-Type", "")
     assert "application/json" in content_type, f"Expected JSON content type, got {content_type!r}"
@@ -23,7 +33,7 @@ def _assert_post_shape(post):
 def test_get_post_by_id(api_client):
     response = api_client.get("/posts/1")
 
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    _assert_status(response, 200)
     post = _assert_json(response)
     _assert_post_shape(post)
     assert post["id"] == 1, f"Expected post id 1, got {post['id']}"
@@ -33,7 +43,7 @@ def test_get_post_by_id(api_client):
 def test_get_posts_filtered_by_user(api_client):
     response = api_client.get("/posts", params={"userId": 1})
 
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    _assert_status(response, 200)
     posts = _assert_json(response)
     assert isinstance(posts, list), f"Expected a list, got {type(posts).__name__}"
     assert len(posts) == 10, f"Expected 10 posts for user 1, got {len(posts)}"
@@ -46,7 +56,7 @@ def test_create_post(api_client):
     payload = API_DATA["new_post"]
     response = api_client.post("/posts", json=payload)
 
-    assert response.status_code == 201, f"Expected 201, got {response.status_code}"
+    _assert_status(response, 201)
     created = _assert_json(response)
     _assert_post_shape(created)
     for field, value in payload.items():
@@ -57,12 +67,12 @@ def test_delete_post(api_client):
     response = api_client.delete("/posts/1")
 
     # JSONPlaceholder only simulates deletion, so the post is not checked as gone afterwards
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    _assert_status(response, 200)
     assert _assert_json(response) == {}, f"Expected an empty object, got {response.text!r}"
 
 
 def test_get_missing_post_returns_404(api_client):
     response = api_client.get("/posts/99999")
 
-    assert response.status_code == 404, f"Expected 404, got {response.status_code}"
+    _assert_status(response, 404)
     assert _assert_json(response) == {}, f"Expected an empty error object, got {response.text!r}"

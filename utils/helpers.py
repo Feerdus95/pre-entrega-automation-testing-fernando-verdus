@@ -25,7 +25,10 @@ def wait(driver: WebDriver):
 
 def element_visible(driver: WebDriver, locator: tuple) -> WebElement:
     """Wait for an element to be visible and return it (centralized TIMEOUT via wait())."""
-    return wait(driver).until(EC.visibility_of_element_located(locator))
+    return wait(driver).until(
+        EC.visibility_of_element_located(locator),
+        message=f"Element {locator} not visible after {TIMEOUT}s",
+    )
 
 
 def is_visible(driver: WebDriver, locator: tuple) -> bool:
