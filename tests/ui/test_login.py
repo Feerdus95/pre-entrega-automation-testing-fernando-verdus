@@ -2,10 +2,17 @@ import pytest
 
 from pages.inventory_page import InventoryPage
 from pages.login_page import LoginPage
+from utils.data_loader import load_json
+
+LOGIN_DATA = load_json("login_data.json")
 
 
-def test_successful_login(driver):
-    LoginPage(driver).login()
+@pytest.mark.parametrize(
+    "username,password",
+    [pytest.param(c["username"], c["password"], id=c["id"]) for c in LOGIN_DATA["valid"]],
+)
+def test_successful_login(driver, username, password):
+    LoginPage(driver).login(username, password)
 
     assert "/inventory.html" in driver.current_url, (
         f"Expected to land on inventory page, current URL: {driver.current_url}"
@@ -18,10 +25,8 @@ def test_successful_login(driver):
 @pytest.mark.parametrize(
     "username,password,expected_error",
     [
-        pytest.param("locked_out_user", "secret_sauce", "Sorry, this user has been locked out.", id="locked-out"),
-        pytest.param("standard_user", "wrong_password", "do not match any user", id="wrong-password"),
-        pytest.param("", "secret_sauce", "Username is required", id="empty-username"),
-        pytest.param("standard_user", "", "Password is required", id="empty-password"),
+        pytest.param(c["username"], c["password"], c["expected_error"], id=c["id"])
+        for c in LOGIN_DATA["invalid"]
     ],
 )
 def test_login_failure_shows_error_banner(driver, username, password, expected_error):

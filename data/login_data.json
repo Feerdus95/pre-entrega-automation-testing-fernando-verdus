@@ -1,0 +1,35 @@
+{
+  "valid": [
+    {
+      "id": "default-account",
+      "username": "standard_user",
+      "password": "secret_sauce"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "locked-out",
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "expected_error": "Sorry, this user has been locked out."
+    },
+    {
+      "id": "wrong-password",
+      "username": "standard_user",
+      "password": "wrong_password",
+      "expected_error": "do not match any user"
+    },
+    {
+      "id": "empty-username",
+      "username": "",
+      "password": "secret_sauce",
+      "expected_error": "Username is required"
+    },
+    {
+      "id": "empty-password",
+      "username": "standard_user",
+      "password": "",
+      "expected_error": "Password is required"
+    }
+  ]
+}
