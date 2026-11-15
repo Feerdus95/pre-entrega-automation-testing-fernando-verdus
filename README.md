@@ -29,8 +29,8 @@ Prerrequisitos: Python 3.x, Google Chrome y acceso a internet (ambas
 aplicaciones bajo prueba son servicios públicos en línea).
 
 ```bash
-git clone https://github.com/Feerdus95/pre-entrega-automation-testing-fernando-verdus.git
-cd pre-entrega-automation-testing-fernando-verdus
+git clone https://github.com/Feerdus95/proyecto-final-automation-testing-fernando-verdus.git
+cd proyecto-final-automation-testing-fernando-verdus
 python -m venv .venv
 ```
 
