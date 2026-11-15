@@ -19,9 +19,11 @@ class ApiClient:
         self.session = requests.Session()
 
     def request(self, method: str, path: str, **kwargs) -> requests.Response:
-        url = f"{self.base_url}{path}"
-        response = self.session.request(method, url, timeout=API_TIMEOUT, **kwargs)
-        logger.info("API %s %s -> %s", method, url, response.status_code)
+        response = self.session.request(
+            method, f"{self.base_url}{path}", timeout=API_TIMEOUT, **kwargs
+        )
+        # response.url includes the encoded query string sent in params
+        logger.info("API %s %s -> %s", method, response.url, response.status_code)
         return response
 
     def get(self, path: str, **kwargs) -> requests.Response:
