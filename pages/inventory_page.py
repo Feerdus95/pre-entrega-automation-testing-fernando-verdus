@@ -27,9 +27,12 @@ class InventoryPage:
         wait(self.driver).until(EC.url_contains("/inventory.html"))
         element_visible(self.driver, self.CONTAINER)
 
-    def products(self):
+    def _visible_products(self):
         wait(self.driver).until(EC.visibility_of_all_elements_located(self.PRODUCTS))
         return self.driver.find_elements(*self.PRODUCTS)
+
+    def product_count(self) -> int:
+        return len(self._visible_products())
 
     def rendered_product_count(self) -> int:
         # Immediate count, no wait: used to prove the inventory is NOT shown
@@ -43,14 +46,14 @@ class InventoryPage:
 
     def first_product_details(self) -> tuple[str, str]:
         """Read the name and price of the first inventory product."""
-        first = self.products()[0]
+        first = self._visible_products()[0]
         name = first.find_element(*self.PRODUCT_NAME).text
         price = first.find_element(*self.PRODUCT_PRICE).text
         logger.info("First product: %s - %s", name, price)
         return name, price
 
     def add_first_product(self) -> str:
-        first = self.products()[0]
+        first = self._visible_products()[0]
         name = first.find_element(*self.PRODUCT_NAME).text
         # React can drop the first synthetic click before handlers are mounted
         # (observed suite flake): retry only while the badge is absent, so a

@@ -9,8 +9,7 @@ def test_inventory_catalog(driver):
 
     assert driver.title == "Swag Labs", f"Expected page title 'Swag Labs', found: '{driver.title}'"
 
-    products = inventory.products()
-    assert len(products) > 0, "Expected at least one product visible in the inventory"
+    assert inventory.product_count() > 0, "Expected at least one product visible in the inventory"
 
     for label, visible in [
         ("main navigation menu", inventory.header.is_menu_visible()),
