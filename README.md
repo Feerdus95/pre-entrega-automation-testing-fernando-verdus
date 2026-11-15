@@ -205,7 +205,8 @@ lo toma sin cambios de código.
   duración y detalle de fallo de cada test. Se incluye la última ejecución
   como evidencia; cada corrida lo regenera.
 - **Capturas de fallo:** `reports/screenshots/<test>_<AAAAMMDD_HHMMSS>.png`.
-  Se toman automáticamente solo cuando falla un test de UI, se embeben en la
+  Se toman automáticamente solo cuando un test de UI falla durante su ejecución
+  (fase `call`), no ante errores de preparación o cierre (`setup`/`teardown`); se embeben en la
   entrada del reporte junto con la URL de la página y no se pisan entre
   corridas. Los caracteres no válidos en nombres de archivo (p. ej. los `[ ]`
   de los tests parametrizados) se reemplazan por `-`. Si la captura falla, se
